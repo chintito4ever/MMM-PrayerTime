@@ -1,24 +1,26 @@
 {
   "name": "MMM-PrayerTime",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "A MagicMirror module to display Islamic praying time with Adhan recital.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chintito4ever/MMM-PrayerTimeV2"
+    "url": "git+https://github.com/chintito4ever/MMM-PrayerTime.git"
   },
   "keywords": [
     "MagicMirror",
+    "Islamic",
     "Islam",
     "PrayerTime",
+    "adzan"
   ],
-  "author": "Asif Nabi",
+  "author": "Slamet Puji Santuso",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chintito4ever/MMM-PrayerTimeV2/issues"
+    "url": "https://github.com/chintito4ever/MMM-PrayerTime/issues"
   },
-  "homepage": "https://github.com/chintito4ever/MMM-PrayerTimeV2",
+  "homepage": "https://github.com/chintito4ever/MMM-PrayerTime#readme",
   "dependencies": {
-    "async": "latest",
+    "async": "^3.2.5",
     "child_process": "latest"
   }
 }
