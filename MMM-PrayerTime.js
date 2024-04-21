@@ -277,143 +277,53 @@ Module.register("MMM-PrayerTime",{
 	// Override dom generator.
 	getDom: function() {
 		Log.log("Updating MMM-PrayerTime DOM.");
-    var self = this;
-    var wrapper = document.createElement("div");
+		var self = this;
+		var wrapper = document.createElement("div");
 
-    if (!this.loaded) {
+		if (!this.loaded) {
 			wrapper.innerHTML = this.translate("LOADING");
 			wrapper.className = "dimmed light small";
+		} else {
+			var table = document.createElement("table");
+			table.className = "small MMM-PrayerTime"; // Add MMM-PrayerTime class to the table
+
+			// Create data rows for each prayer
+			var prayerTimes = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+			prayerTimes.forEach(function(prayer, index) {
+				var row = document.createElement("tr");
+
+				// Prayer name cell
+				var nameCell = document.createElement("td");
+				nameCell.className = "prayer-name " + prayer.toLowerCase(); // Add a class based on the prayer name
+				nameCell.textContent = prayer;
+				nameCell.style.color = "#dbdcdf"; // Set color for prayer names
+				row.appendChild(nameCell);
+
+				// Prayer time cell
+				var timeCell = document.createElement("td");
+				timeCell.className = "prayer-time";
+				var time = self.arrTodaySchedule.find(schedule => schedule[0].toLowerCase() === prayer.toLowerCase())[1];
+				timeCell.textContent = (self.config.timeFormat == 12 ? moment(time, ["HH:mm"]).format("h:mm A") : time);
+				timeCell.style.color = "#dbdcdf"; // Set color for prayer times
+				row.appendChild(timeCell);
+
+				// Append row to table
+				table.appendChild(row);
+
+				// Add bottom border to cell (except for the last one)
+				if (index < prayerTimes.length - 1) {
+					nameCell.style.borderBottom = "0.7px solid rgba(0, 0, 0, 0.1)";
+					timeCell.style.borderBottom = "0.7px solid rgba(0, 0, 0, 0.1)";
+				}
+			});
+
+			// Append table to wrapper
+			wrapper.appendChild(table);
 		}
-    else {
-      var table = document.createElement("table");
-      table.className = "small";
-
-      if (this.config.vertical) { // vertical view
-        var row = document.createElement("tr");
-        if (this.config.colored) {
-          row.className = "colored";
-        }
-        table.appendChild(row);
-
-        var occasionName = document.createElement("td");
-        occasionName.className = "occasion-name bright light";
-        occasionName.innerHTML = '&nbsp;';
-        row.appendChild(occasionName);
-
-        // today
-        var occasionTime = document.createElement("td");
-        occasionTime.className = "occasion-time bright light";
-        occasionTime.innerHTML = this.translate('TODAY');
-        row.appendChild(occasionTime);
-
-        if (this.config.showTomorrow) {
-          // nextday
-          var occasionTimeNext = document.createElement("td");
-          occasionTimeNext.className = "occasion-time bright light";
-          //occasionTimeNext.innerHTML = this.todaySchedule[t];
-          occasionTimeNext.innerHTML = this.translate('TOMORROW');
-          row.appendChild(occasionTimeNext);
-        }
-
-        //for (var i = 0, count = this.todaySchedule.length; i < count; i++) {
-        //for (t in this.todaySchedule)
-        for (t in this.arrTodaySchedule)
-        {
-          row = document.createElement("tr");
-          if (this.config.colored) {
-            row.className = "colored";
-          }
-          table.appendChild(row);
-
-          var occasionName = document.createElement("td");
-          occasionName.className = "occasion-name bright light";
-          //occasionName.innerHTML = this.translate(t);
-          occasionName.innerHTML = this.translate(this.arrTodaySchedule[t][0].toUpperCase());
-          row.appendChild(occasionName);
-
-          // today
-          var occasionTime = document.createElement("td");
-          occasionTime.className = "occasion-time bright light";
-          //occasionTime.innerHTML = this.todaySchedule[t];
-          occasionTime.innerHTML = (this.config.timeFormat == 12 ? moment(this.arrTodaySchedule[t][1], ["HH:mm"]).format("h:mm A") : this.arrTodaySchedule[t][1]);
-          row.appendChild(occasionTime);
-
-          if (this.config.showTomorrow) {
-            // nextday
-            var occasionTimeNext = document.createElement("td");
-            occasionTimeNext.className = "occasion-time bright light";
-            //occasionTimeNext.innerHTML = this.todaySchedule[t];
-            occasionTimeNext.innerHTML = (this.config.timeFormat == 12 ? moment(this.arrNextdaySchedule[t][1], ["HH:mm"]).format("h:mm A") : this.arrNextdaySchedule[t][1]);
-            row.appendChild(occasionTimeNext);
-          }
-        }
-      }
-      else { // horizontal view
-        var table = document.createElement("table");
-        table.className = "small";
-
-        var row = document.createElement("tr");
-        if (this.config.colored) {
-          row.className = "colored";
-        }
-        table.appendChild(row);
-
-        var occasionName = document.createElement("td");
-        occasionName.className = "occasion-name bright light";
-        occasionName.innerHTML = '&nbsp;';
-        row.appendChild(occasionName);
-
-        // column label
-        for (t in this.arrTodaySchedule) {
-          var occasionTime = document.createElement("td");
-          occasionTime.className = "occasion-time bright light";
-          occasionTime.innerHTML = this.translate(this.arrTodaySchedule[t][0].toUpperCase());
-          row.appendChild(occasionTime);
-        }
-
-        // today
-        var rowToday = document.createElement("tr");
-        if (this.config.colored) {
-          rowToday.className = "colored";
-        }
-        table.appendChild(rowToday);
-
-        var occasionNameToday = document.createElement("td");
-        occasionNameToday.className = "occasion-time bright light";
-        occasionNameToday.innerHTML = this.translate('TODAY');
-        rowToday.appendChild(occasionNameToday);
-        for (t in this.arrTodaySchedule) {
-          var occasionTimeToday = document.createElement("td");
-          occasionTimeToday.className = "occasion-time bright light";
-          occasionTimeToday.innerHTML = (this.config.timeFormat == 12 ? moment(this.arrTodaySchedule[t][1], ["HH:mm"]).format("h:mm A") : this.arrTodaySchedule[t][1]);
-          rowToday.appendChild(occasionTimeToday);
-        }
-
-        if (this.config.showTomorrow) {
-          // nextday
-          var rowNext = document.createElement("tr");
-          if (this.config.colored) {
-            rowNext.className = "colored";
-          }
-          table.appendChild(rowNext);
-
-          var occasionNameNext = document.createElement("td");
-          occasionNameNext.className = "occasion-time bright light";
-          occasionNameNext.innerHTML = this.translate('TOMORROW');
-          rowNext.appendChild(occasionNameNext);
-          for (t in this.arrTodaySchedule) {
-            var occasionTimeNext = document.createElement("td");
-            occasionTimeNext.className = "occasion-time bright light";
-            occasionTimeNext.innerHTML = (this.config.timeFormat == 12 ? moment(this.arrNextdaySchedule[t][1], ["HH:mm"]).format("h:mm A") : this.arrNextdaySchedule[t][1]);
-            rowNext.appendChild(occasionTimeNext);
-          }
-        }
-      }
-      wrapper.appendChild(table);
-    }
 
 		return wrapper;
-  },
+	},
+
 
 	notificationReceived: function(notification, payload, sender) {
 		Log.log(this.name + ": received notification : " + notification);
